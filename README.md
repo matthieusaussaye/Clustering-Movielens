@@ -24,7 +24,7 @@ Train / Vizualise the model :
 Machine Learning Web interface :
 
 -  Train the model :
-http://127.0.0.1:5000/training :
+http://127.0.0.1:5000/training
 
 - Querying an embedding of a user :
 http://127.0.0.1:5000/querying

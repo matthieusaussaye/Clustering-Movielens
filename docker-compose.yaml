@@ -1,0 +1,30 @@
+
+version: '3.4'
+services:
+  model:
+    build: .
+    volumes:
+      - .:/app
+    environment:
+      - FLASK_APP=flask_movie_reco.py
+    ports:
+      - 127.0.0.1:5000:5000
+    command: "poetry run flask run --host=0.0.0.0"
+  note:
+    build: .
+    volumes:
+      - .:/app
+    ports:
+      - 127.0.0.1:8888:8888
+    command: "poetry run jupyter notebook --no-browser --ip=0.0.0.0 --port=8888 --allow-root --NotebookApp.token='' --NotebookApp.password='' --NotebookApp.disable_check_xsrf=True"
+    
+    
+#version: "3.8"
+
+#services:
+#  model:
+#    build:
+#      context: ./
+#    ports:
+#      - 5000:5000
+

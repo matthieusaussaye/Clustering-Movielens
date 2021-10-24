@@ -41,3 +41,6 @@ def query() :
         return render_template(user_embedding_file)
     else :
         return "Train the model before querying"
+
+#if __name__ == "__main__":
+#    app.run(host ='0.0.0.0', port = 5000, debug = True) 

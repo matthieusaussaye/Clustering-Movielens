@@ -13,27 +13,30 @@ Flask commands
 API Queries :
 
 - In a python terminal :
+
 $ export FLASK_APP=flask_movie_reco.py
 
 $ flask run
 
-=======
-
 Train / Vizualise the model : 
-
-http://127.0.0.1:5000/training : Train the model
-
-http://127.0.0.1:5000/querying : Enter the 'user_id' you want to see the associated cluster
-                                 See the heatmap with 60 Top Rated movies.
-
 =======
+
+Machine Learning Web interface :
+
+-  Train the model :
+http://127.0.0.1:5000/training :
+
+- Querying an embedding of a user :
+http://127.0.0.1:5000/querying
+- Enter the 'user_id' you want to see the associated cluster.
+- See the heatmap with 60 Top Rated movies.
+
 
 Use the notebook "K-Means Clustering of movies.ipynb" :
+=======
 
-http://127.0.0.1:8888/ : Access the jupyter interface
+- Access the jupyter interface :
+http://127.0.0.1:8888/
 
-Then, open "K-Means Clustering of movies.ipynb"
-
-======
-
+- Open "K-Means Clustering of movies.ipynb"
 

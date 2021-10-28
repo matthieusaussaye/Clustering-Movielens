@@ -10,19 +10,29 @@ import base64
 from io import BytesIO
 
         
-def clustering_errors(k, data):
+def clustering_errors(k : int,
+                      data) -> list :
     """
-    Return silhouette score of k-means
+    Return the silhouette score of k-means
+    
+    Return:
+        - silhouette_avg (list) : list of silhouette scores.
     """
     kmeans = KMeans(n_clusters=k).fit(data)
     predictions = kmeans.predict(data)
     silhouette_avg = silhouette_score(data, predictions)
     return silhouette_avg
-
     
-def draw_movie_clusters(clustered, max_users, max_movies):
+def draw_movie_clusters(clustered : list,
+                        max_users : int,
+                        max_movies : int):
     """
     Draw every interesting clusters heatmap (max_users, max_movies)
+
+    Args:
+        - clustered (list) : list of the clusters predictions
+        - max_users (int) : maximum of users to show on the heatmap
+        - max_movies (int) : nb maximal of movies to show on the heatmap
     """
     c=1
     for cluster_id in clustered.group.unique():
@@ -75,12 +85,17 @@ def draw_movie_clusters(clustered, max_users, max_movies):
 
             plt.show()
 
-def draw_user_embedding(clustered,
-                        user_id,
+def draw_user_embedding(clustered: list,
+                        user_id : int,
                         max_users : int,
-                        max_movies) :
+                        max_movies : int) :
     """
     Draw the cluster heatmap embedding the user.
+
+    Args:
+        - clustered (list) : list of the clusters predictions
+        - max_users (int) : maximum of users to show on the heatmap
+        - max_movies (int) : nb maximal of movies to show on the heatmap
     """
     c=1
     cluster_id = int(clustered[clustered['index']==user_id].group.values)
@@ -100,7 +115,7 @@ def draw_user_embedding(clustered,
     #if len(d) > 9:
     print('cluster # {}'.format(cluster_id))
     print('# of users in cluster: {}.'.format(n_users_in_cluster), '# of users in plot: {}'.format(n_users_in_plot))
-    fig = plt.figure(figsize=(15,4))
+    fig = plt.figure(figsize=(15,3))
     ax = plt.gca()
 
     ax.invert_yaxis()
@@ -134,6 +149,7 @@ def draw_user_embedding(clustered,
     #save file as html
     tmpfile = BytesIO()
     plt.savefig(tmpfile, format='png')
+    plt.savefig('test.png', format='png')
     encoded = base64.b64encode(tmpfile.getvalue()).decode('utf-8')
 
     html = 'User Embedding' + '<img src=\'data:image/png;base64,{}\'>'.format(encoded) + f'User id : {user_id} | Cluster id : {cluster_id} |  nb of users in cluster: {n_users_in_cluster}'
@@ -144,11 +160,17 @@ def draw_user_embedding(clustered,
     #return path to file
     return(f'user{user_id}_embedding.html')
     
-
-
-def get_most_rated_movies(user_movie_ratings, max_number_of_movies):
+def get_most_rated_movies(user_movie_ratings : pd.DataFrame,
+                          max_number_of_movies : int) -> pd.DataFrame :
     """
-    Return a dataframe of the most rated movies
+    Return a dataframe of the most rated movies the count associated.
+
+    Args:
+        - user_movie_ratings (pd.DataFrame) : Dataframe of the ratings of the users.
+        - max_number_of_movies (int) : max number of movies.
+
+    Returns:
+        - most_rated_movies (pd.DataFrame) : Dataframe of the most rated movies and the count associated
     """
     # 1- Count
     user_movie_ratings = user_movie_ratings.append(user_movie_ratings.count(), ignore_index=True)
@@ -159,9 +181,17 @@ def get_most_rated_movies(user_movie_ratings, max_number_of_movies):
     most_rated_movies = user_movie_ratings_sorted.iloc[:, :max_number_of_movies]
     return most_rated_movies
 
-def get_users_who_rate_the_most(most_rated_movies, max_number_of_movies):
+def get_users_who_rate_the_most(most_rated_movies : pd.DataFrame, 
+                                max_number_of_movies : int) -> pd.DataFrame:
     """
     Return a dataframe of the most voting user
+
+    Args:
+        - user_movie_ratings (pd.DataFrame) : Dataframe of the ratings of the users.
+        - max_number_of_movies (int) : max number of movies.
+
+    Returns:
+        - most_rated_movies_users_selection (pd.DataFrame) : Dataframe of the most voting users chosen by user
     """
     # Get most voting users
     # 1- Count
@@ -174,17 +204,33 @@ def get_users_who_rate_the_most(most_rated_movies, max_number_of_movies):
     
     return most_rated_movies_users_selection
 
-def sort_by_rating_density(user_movie_ratings, n_movies, n_users):
+def sort_by_rating_density(user_movie_ratings : pd.DataFrame,
+                           n_movies : int,
+                           n_users : int) -> pd.DataFrame :
     """
     Return a dataframe of the most voting user x the most rated movies
+
+    Args:
+        - user_movie_ratings (pd.DataFrame) : Dataframe of the ratings of the users.
+        - n_movies (int) : max number of movies.
+        - n_users (int) : max number of users.
+
+    Returns:
+        - most_rated_movies (pd.DataFrame) : Dataframe of the most voting users x most rated movies chosen by user
     """
     most_rated_movies = get_most_rated_movies(user_movie_ratings, n_movies)
     most_rated_movies = get_users_who_rate_the_most(most_rated_movies, n_users)
     return most_rated_movies
     
-def draw_movies_heatmap(most_rated_movies_users_selection, axis_labels=True):
+def draw_movies_heatmap(most_rated_movies_users_selection : pd.DataFrame,
+                        axis_labels : bool = True):
     """
     Return a heatmap of the most voting user x the most rated movies
+
+    Args :
+        - axis_labels (bool) = True : show/not show the label axis
+        - most_rated_movies_users_selection (pd.Dataframe) : Dataframe of the most rated movies x the most rating users
+
     """
 
     fig = plt.figure(figsize=(15,4))
